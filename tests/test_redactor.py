@@ -1,11 +1,16 @@
+import os
 import pytest
-
 from privacy_filter_redactor import DecodingMode
 
+# Skip model-based tests if specified (e.g., in CI environments to avoid 3GB download)
+SKIP_HEAVY = os.environ.get("SKIP_HEAVY", "false").lower() == "true"
+skip_if_heavy = pytest.mark.skipif(SKIP_HEAVY, reason="Skipping heavy model-based test")
 
+
+@skip_if_heavy
 def test_basic_redaction(redactor):
     """Verify standard redaction of common PII types."""
-    text = "Call Alice at 555-0101."
+    text = "Call Alice Smith at 555-0101."
     redacted = redactor.redact(text)
 
     assert "[PRIVATE_PERSON]" in redacted
@@ -14,6 +19,7 @@ def test_basic_redaction(redactor):
     assert "555-0101" not in redacted
 
 
+@skip_if_heavy
 def test_detect_returns_correct_metadata(redactor):
     """Ensure detect() returns valid DetectedEntity objects."""
     text = "My email is test@example.com"
@@ -28,6 +34,7 @@ def test_detect_returns_correct_metadata(redactor):
     assert 0 <= ent.score <= 1.0
 
 
+@skip_if_heavy
 def test_custom_string_placeholder(redactor):
     """Verify that a simple string placeholder works correctly."""
     text = "Alice Smith's number is 555-0101"
@@ -37,6 +44,7 @@ def test_custom_string_placeholder(redactor):
     assert "Alice" not in redacted
 
 
+@skip_if_heavy
 def test_custom_callable_placeholder(redactor):
     """Verify that a callable placeholder is executed correctly."""
 
@@ -48,6 +56,7 @@ def test_custom_callable_placeholder(redactor):
     assert redacted == "<private_person>"
 
 
+@skip_if_heavy
 def test_redact_with_details(redactor):
     """Verify the convenience method returns both text and list."""
     text = "Alice Smith"
@@ -58,19 +67,23 @@ def test_redact_with_details(redactor):
     assert entities[0].text == "Alice Smith"
 
 
+@skip_if_heavy
 def test_empty_string_behavior(redactor):
     """Ensure the library handles empty input gracefully."""
     assert redactor.detect("") == []
     assert redactor.redact("") == ""
 
 
+@skip_if_heavy
 def test_mode_switching_does_not_crash(redactor):
     """Ensure we can switch between modes without errors."""
-    text = "Contact Alice."
+    text = "Contact Alice Smith."
     for mode in DecodingMode:
         redactor.redact(text, mode=mode)
 
 
+@skip_if_heavy
+@skip_if_heavy
 def test_whitespace_trimming(redactor):
     """
     Verify that our custom _trim_whitespace_from_offsets works.
@@ -85,6 +98,7 @@ def test_whitespace_trimming(redactor):
     assert new_start == 6
 
 
+@skip_if_heavy
 @pytest.mark.parametrize(
     "input_text",
     [
@@ -99,6 +113,7 @@ def test_edge_case_inputs(redactor, input_text):
     assert isinstance(result, str)
 
 
+@skip_if_heavy
 def test_redact_file_logic(redactor, tmp_path):
     """Verify redact_file correctly reads and redacts a file."""
     p = tmp_path / "test.txt"

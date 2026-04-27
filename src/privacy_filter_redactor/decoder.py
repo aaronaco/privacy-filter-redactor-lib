@@ -23,7 +23,7 @@ class BIOTag(StrEnum):
 
 
 # Decoder Constants
-DEFAULT_BIAS_SHIFT: Final[float] = 5.0
+DEFAULT_BIAS_SHIFT: Final[float] = 10.0
 START_TAG_PENALTY: Final[float] = 100.0  # Penalty for starting a sequence with I or E tags
 
 
@@ -175,6 +175,10 @@ class ViterbiCRFDecoder:
             tag, _ = self._parse_label(self.id2label[i])
             if tag in [BIOTag.INSIDE, BIOTag.END]:
                 current_scores[i] -= START_TAG_PENALTY
+            elif tag in [BIOTag.BEGIN, BIOTag.SINGLE]:
+                current_scores[i] += self.transition_biases["background_to_start"]
+            elif tag == BIOTag.OUTSIDE:
+                current_scores[i] += self.transition_biases["background_stay"]
 
         path_backpointers = torch.zeros(
             (sequence_length, num_labels), dtype=torch.long, device=token_logits.device
