@@ -1,5 +1,7 @@
 import pytest
+
 from privacy_filter_redactor import PIIRedactor
+
 
 @pytest.fixture(scope="session")
 def redactor():

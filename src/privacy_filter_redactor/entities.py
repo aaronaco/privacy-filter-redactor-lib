@@ -12,6 +12,7 @@ class DetectedEntity:
         text: The actual text content of the entity.
         score: The confidence score or logit path probability.
     """
+
     label: str
     start: int
     end: int

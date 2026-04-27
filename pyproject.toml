@@ -18,6 +18,26 @@ license = { text = "MIT" }
 [tool.hatch.build.targets.wheel]
 packages = ["src/privacy_filter_redactor"]
 
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort
+    "B",   # flake8-bugbear
+    "C4",  # flake8-comprehensions
+    "UP",  # pyupgrade
+]
+ignore = []
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
@@ -26,4 +46,5 @@ build-backend = "hatchling.build"
 dev = [
     "pytest>=9.0.3",
     "pytest-mock>=3.15.1",
+    "ruff>=0.15.12",
 ]
