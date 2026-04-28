@@ -2,9 +2,10 @@
 title: Privacy Filter Redactor
 emoji: 🛡️
 colorFrom: blue
-colorTo: slate
+colorTo: indigo
 sdk: gradio
-sdk_version: 5.0.0
+sdk_version: 6.13.0
+python_version: 3.12
 app_file: app.py
 pinned: false
 license: mit
@@ -22,5 +23,5 @@ This is a demonstration of the `privacy-filter-redactor-lib`, a local-first PII 
 ## How to use
 1. Enter your text in the left panel.
 2. Select a sensitivity mode (Balanced is usually best).
-3. Click "Redact Text".
+3. Click "Redact".
 4. Review the redacted result and the detailed entity table below.
