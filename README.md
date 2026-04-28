@@ -1,9 +1,8 @@
 # privacy-filter-redactor-lib
 
-A high-performance Python library for local PII (Personally Identifiable Information) detection and redaction, powered by OpenAI's `privacy-filter` model.
+A high-performance Python library for local PII (Personally Identifiable Information) detection and redaction, powered by OpenAI's `privacy-filter` model and optimized with a Viterbi CRF decoder.
 
 ## Features
-
 - **Local-First**: Runs entirely on your machine via `transformers` and `torch`. No data leaves your infrastructure.
 - **Smart Decoding**: Uses a Viterbi CRF decoder to ensure coherent PII spans and boundary stability.
 - **Long Context**: Leverages a 128k token context window to redact entire documents without chunking.
@@ -12,11 +11,26 @@ A high-performance Python library for local PII (Personally Identifiable Informa
 
 ## Installation
 
+This library is designed to be installed directly from GitHub. It is highly recommended to use [uv](https://docs.astral.sh/uv/) for dependency management.
+
+### For projects (recommended)
+Add this library as a dependency to your project:
 ```bash
-pip install privacy-filter-redactor-lib
+uv add "git+https://github.com/aaronaco/privacy-filter-redactor-lib.git"
 ```
 
-_Note: Ensure you have `torch` and `transformers` installed in your environment._
+To ensure stability, it is best practice to pin to a specific tag:
+```bash
+uv add "git+https://github.com/aaronaco/privacy-filter-redactor-lib.git" --tag v0.1.0
+```
+
+### For scripts or ad-hoc usage
+Install directly into your current environment:
+```bash
+uv pip install "git+https://github.com/aaronaco/privacy-filter-redactor-lib.git"
+```
+
+*Note: This library requires `torch` and `transformers`. `uv` will resolve these automatically during installation.*
 
 ## Quick Start
 
@@ -26,7 +40,7 @@ from privacy_filter_redactor import PIIRedactor
 # Initialize the redactor (auto-detects CPU/CUDA)
 redactor = PIIRedactor()
 
-text = "Contact Jason at jason.statham@example.com or 555-0199."
+text = "Contact Alice Smith at alice@example.com or 555-0199."
 
 # 1. Simple Redaction
 redacted = redactor.redact(text)
@@ -53,19 +67,17 @@ print(redactor.redact(text, placeholder=hasher))
 ## Advanced Usage
 
 ### Precision vs. Recall Modes
-
 The library supports three decoding modes to control sensitivity:
-
 - `balanced`: The default setting, optimized for general use.
 - `high_recall`: Favors catching more PII at the risk of higher false positives.
 - `high_precision`: Favors accuracy to minimize over-redaction.
 
 ```python
-redacted = redactor.redact(text, mode="high_recall")
+from privacy_filter_redactor import DecodingMode
+redacted = redactor.redact(text, mode=DecodingMode.HIGH_RECALL)
 ```
 
 ### Redacting Files
-
 Process large files efficiently using the massive 128k context window:
 
 ```python
@@ -73,9 +85,7 @@ redacted_content = redactor.redact_file("path/to/large_doc.txt")
 ```
 
 ## Supported Categories
-
 The model detects 8 specific privacy categories:
-
 - `private_person`: Names of individuals.
 - `private_email`: Email addresses.
 - `private_phone`: Telephone numbers.
@@ -85,6 +95,56 @@ The model detects 8 specific privacy categories:
 - `account_number`: Financial or system ID numbers.
 - `secret`: Catch-all for credentials, API keys, and passwords.
 
-## License
+---
 
+## Contributing
+
+We welcome contributions! This project uses [uv](https://docs.astral.sh/uv/) for dependency management and development workflows.
+
+### Development Setup
+
+1. **Install uv**:
+   ```bash
+   curl -LsSf https://astral.sh/uv/install.sh | sh
+   ```
+2. **Clone and Sync**:
+   ```bash
+   git clone https://github.com/aaronaco/privacy-filter-redactor-lib.git
+   cd privacy-filter-redactor-lib
+   uv sync --all-groups
+   ```
+
+### Common Workflows
+
+Use `uv run` to execute commands within the project context:
+
+*   **Run Logic Tests (Fast)**:
+    ```bash
+    SKIP_HEAVY=true uv run pytest
+    ```
+*   **Run Full Test Suite (Requires 3GB model download)**:
+    ```bash
+    uv run pytest
+    ```
+*   **Lint & Format**:
+    ```bash
+    uv run ruff check --fix
+    uv run ruff format
+    ```
+
+### Architecture Overview
+
+- **`src/privacy_filter_redactor/redactor.py`**: The main API entry point. Handles model loading and alignment.
+- **`src/privacy_filter_redactor/decoder.py`**: The Viterbi CRF implementation. This is the "brain" that enforces BIOES consistency.
+- **`src/privacy_filter_redactor/entities.py`**: Core data structures for detected entities.
+
+### Proposing Changes
+
+1. Create a feature branch.
+2. Ensure all logic tests pass (`SKIP_HEAVY=true`).
+3. Run `ruff format .` and `ruff check .` to maintain code quality.
+4. Update `CHANGELOG.md` following the [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) format.
+5. Submit a Pull Request.
+
+## License
 MIT
