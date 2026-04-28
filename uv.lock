@@ -973,7 +973,7 @@ wheels = [
 
 [[package]]
 name = "privacy-filter-redactor-lib"
-version = "0.1.0"
+version = "0.1.1"
 source = { editable = "." }
 dependencies = [
     { name = "huggingface-hub" },
