@@ -22,8 +22,7 @@ class BIOTag(StrEnum):
     SINGLE = "S"
 
 
-# Decoder Constants
-DEFAULT_BIAS_SHIFT: Final[float] = 10.0
+DEFAULT_BIAS_SHIFT: Final[float] = 5.0
 START_TAG_PENALTY: Final[float] = 100.0  # Penalty for starting a sequence with I or E tags
 
 
