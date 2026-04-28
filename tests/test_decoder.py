@@ -1,6 +1,7 @@
-import torch
 import pytest
-from privacy_filter_redactor.decoder import ViterbiCRFDecoder, DecodingMode, BIOTag
+import torch
+
+from privacy_filter_redactor.decoder import BIOTag, DecodingMode, ViterbiCRFDecoder
 
 
 @pytest.fixture
@@ -34,9 +35,11 @@ def test_mode_sensitivity_difference(id2label):
     """Verify that different modes actually shift the results on ambiguous logits."""
     # Step 0: 'O' is winner by 1.0
     # High recall (bias 10) should flip this easily
-    logits = torch.tensor([
-        [5.0, 4.0, 0.0, 0.0, 4.0],
-    ])
+    logits = torch.tensor(
+        [
+            [5.0, 4.0, 0.0, 0.0, 4.0],
+        ]
+    )
 
     decoder_precision = ViterbiCRFDecoder(id2label, mode=DecodingMode.HIGH_PRECISION)
     decoder_recall = ViterbiCRFDecoder(id2label, mode=DecodingMode.HIGH_RECALL)

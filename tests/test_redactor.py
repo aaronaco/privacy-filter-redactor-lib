@@ -1,5 +1,7 @@
 import os
+
 import pytest
+
 from privacy_filter_redactor import DecodingMode
 
 # Skip model-based tests if specified (e.g., in CI environments to avoid 3GB download)
