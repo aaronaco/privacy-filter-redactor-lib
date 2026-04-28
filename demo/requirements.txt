@@ -1,0 +1,5 @@
+gradio>=5.0.0
+spaces
+torch
+transformers
+git+https://github.com/aaronaco/privacy-filter-redactor-lib.git

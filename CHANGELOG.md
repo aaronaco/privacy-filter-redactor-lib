@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.1] - 2026-04-28
+
+### Added
+
+- Gradio-powered interactive demo for Hugging Face Spaces with Zero-GPU support.
+- Add examples in the demo interface.
+
+### Changed
+
+- Aligned Viterbi sensitivity presets with official values from the OpenAI Privacy Filter Model Card (April 2026).
+
 ## [0.1.0] - 2026-04-28
 
 ### Added

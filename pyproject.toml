@@ -1,9 +1,9 @@
 [project]
 name = "privacy-filter-redactor-lib"
-version = "0.1.0"
+version = "0.1.1"
 description = "A local-first PII detection and redaction library using OpenAI's privacy-filter model."
 authors = [
-    { name = "Aaron", email = "aaron@example.com" }
+    { name = "Aaron A.", email = "aaronacodev@gmail.com" }
 ]
 readme = "README.md"
 requires-python = ">=3.12"
@@ -44,6 +44,7 @@ build-backend = "hatchling.build"
 
 [dependency-groups]
 dev = [
+    "gradio>=6.13.0",
     "pytest>=9.0.3",
     "pytest-mock>=3.15.1",
     "ruff>=0.15.12",
